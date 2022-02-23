@@ -1,5 +1,7 @@
 # 微博爬虫
 
+![微博爬虫](/Users/astria/Documents/微博爬虫.png)
+
 ## 微博评论爬虫(CommentsSpider)
 
 博客ID(weibo_id)
