@@ -96,6 +96,10 @@ DOWNLOADER_MIDDLEWARES = {
     'weibo.middlewares.RandomUserAgentMiddleware': 543,
 }
 
+ITEM_PIPELINES = {
+    'weibo.pipelines.MongoDBPipeline': 301,
+}
+
 # 填写代理池对应url
 PROXY_URL = 'http://localhost:5555/random'
 

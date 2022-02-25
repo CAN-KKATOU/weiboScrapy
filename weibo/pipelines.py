@@ -78,8 +78,10 @@ class MongoDBPipeline(object):
         :return:
         """
         if isinstance(item, UserItem) or isinstance(item, FanItem) or isinstance(item, FollowItem) \
-                or isinstance(item, WeiboItem) or isinstance(WeiboListItem) or isinstance(CommentUserItem):
-            self.db[item.collection].update({'id': item.get('id')}, {'$set': item}, True)
+                or isinstance(item, CommentUserItem):
+            self.db[item.collection].update_one({'user_id': item.get('user_id')}, {'$set':dict(item)}, True)
+        elif isinstance(item, WeiboListItem) or isinstance(item, WeiboItem):
+            self.db[item.collection].update_one({'weibo_id': item.get('weibo_id')}, {'$set': dict(item)}, True)
         return item
 
     def process_item(self, item, spider):
