@@ -15,16 +15,17 @@ class CommentsspiderSpider(scrapy.Spider):
     custom_settings = {
         'ITEM_PIPELINES': {
             'weibo.pipelines.CommentTextPipeline': 300,
+            'weibo.pipelines.MongoDBPipeline': 301,
         }
     }
 
     def start_requests(self):
         for weibo_id in self.weibos_id:
+            yield scrapy.Request(f'{self.comment_url}{weibo_id}&mid={weibo_id}',
+                                 callback=self.parse_comments, meta={'weibo_id': weibo_id})
             yield PyppeteerRequest(f'{self.weibo_url}/{weibo_id}',
                                    callback=self.parse_weibo, wait_for='.f-weibo.card9.m-panel',
                                    meta={'weibo_id': weibo_id})
-            yield scrapy.Request(f'{self.comment_url}{weibo_id}&mid={weibo_id}',
-                                 callback=self.parse_comments, meta={'weibo_id': weibo_id})
 
     def parse_weibo(self, response):
         weibo_id = response.meta.get('weibo_id')
@@ -79,6 +80,6 @@ class CommentsspiderSpider(scrapy.Spider):
             max_id = result.get('data').get('max_id')
             max_id_type = result.get('data').get('max_id_type')
             weibo_id = response.meta.get('weibo_id')
-            yield scrapy.Request(
-                f'{self.comment_url}{weibo_id}&mid={weibo_id}&max_id={max_id}&max_id_type={max_id_type}',
-                callback=self.parse_comments, meta={'weibo_id': weibo_id})
+            # yield scrapy.Request(
+                # f'{self.comment_url}{weibo_id}&mid={weibo_id}&max_id={max_id}&max_id_type={max_id_type}',
+                # callback=self.parse_comments, meta={'weibo_id': weibo_id})

@@ -12,6 +12,7 @@ class WeibospiderSpider(scrapy.Spider):
     custom_settings = {
         'ITEM_PIPELINES': {
             'weibo.pipelines.WeiboTextPipeline': 300,
+            'weibo.pipelines.MongoDBPipeline': 301,
         }
     }
 
