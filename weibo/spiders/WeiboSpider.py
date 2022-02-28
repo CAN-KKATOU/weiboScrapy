@@ -7,12 +7,13 @@ class WeibospiderSpider(scrapy.Spider):
     name = 'WeiboSpider'
     allowed_domains = ['m.weibo.cn']
     weibo_url = 'https://m.weibo.cn/api/container/getIndex?type=uid&value={user_id}&containerid=107603{user_id}'
-    start_users = ['1627500245']
+    start_users = ['6634214154']
 
     custom_settings = {
         'ITEM_PIPELINES': {
             'weibo.pipelines.WeiboTextPipeline': 300,
-            'weibo.pipelines.MongoDBPipeline': 301,
+            'weibo.pipelines.CountPipeline': 301,
+            'weibo.pipelines.MongoDBPipeline': 302,
         }
     }
 
@@ -54,6 +55,8 @@ class WeibospiderSpider(scrapy.Spider):
                     weiboItem['reposts_count'] = weibo.get('reposts_count')
                     weiboItem['comments_count'] = weibo.get('comments_count')
                     weiboItem['attitudes_count'] = weibo.get('attitudes_count')
+                    weiboItem['created_at'] = weibo.get('created_at')
+                    weiboItem['source'] = weibo.get('source')
                     yield weiboItem
 
         if result.get('ok') and result.get('data').get('cardlistInfo'):
