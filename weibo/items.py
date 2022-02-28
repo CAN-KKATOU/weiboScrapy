@@ -112,6 +112,12 @@ class WeiboItem(Item):
     collection = 'weibo'
     # 微博ID（指每一条微博唯一的ID号，非微博账号ID）
     weibo_id = Field()
+    # 该微博用户名称
+    user_name = Field()
+    # 发送时间
+    created_at = Field()
+    # 来源
+    source = Field()
     # 微博文字内容
     text = Field()
     # 微博图片内容
@@ -135,6 +141,8 @@ class CommentUserItem(Item):
     weibo_id = Field()
     # 评论内容
     comment_text = Field()
+    # 评论时间
+    comment_time = Field()
     # 该评论点赞数量
     like_count = Field()
     # ID
@@ -184,6 +192,6 @@ class WeiboListItem(Item):
     # 点赞数
     attitudes_count = Field()
     # 发送时间
-    create_at = Field()
+    created_at = Field()
     # 来源
     source = Field()

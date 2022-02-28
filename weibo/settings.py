@@ -12,7 +12,6 @@ BOT_NAME = 'weibo'
 SPIDER_MODULES = ['weibo.spiders']
 NEWSPIDER_MODULE = 'weibo.spiders'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'weibo (+http://www.yourdomain.com)'
 
@@ -31,7 +30,7 @@ ROBOTSTXT_OBEY = False
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -89,6 +88,9 @@ ROBOTSTXT_OBEY = False
 
 
 # ======================================================================================================================
+
+cookies = '_T_WM=25819906092; SUB=_2A25PHZG9DeRhGeFN6lEX8ifEzTmIHXVs4T_1rDV6PUJbkdAKLXKtkW1NQH_UVmjklbxqsRdjaj3fWUQWf3APswy3; SCF=Ak85drrVzkjf9lTXKl6yFa5WOiAX3idRh88VO_dd-95ZJVZ5-QqkBSJ4IYR8jCJBmU2JcPKrH7afGr3eyV7Ioj4.; MLOGIN=1; WEIBOCN_FROM=1110106030; XSRF-TOKEN=e4804c; M_WEIBOCN_PARAMS=oid=4727306683680863&luicode=10000011&lfid=1076033669102477'
+
 # 中间件
 DOWNLOADER_MIDDLEWARES = {
     'gerapy_pyppeteer.downloadermiddlewares.PyppeteerMiddleware': 541,
@@ -97,7 +99,8 @@ DOWNLOADER_MIDDLEWARES = {
 }
 
 ITEM_PIPELINES = {
-    'weibo.pipelines.MongoDBPipeline': 301,
+    'weibo.pipelines.CountPipeline': 301,
+    'weibo.pipelines.MongoDBPipeline': 302,
 }
 
 # 填写代理池对应url
@@ -110,6 +113,6 @@ GERAPY_PYPPETEER_PRETEND = True
 GERAPY_PYPPETEER_TIMEOUT = 30
 
 # MONGODB数据库信息
-MONGODB_CONNECTION_URL = 'mongodb://admin:admin123@192.168.50.60:27017'
+MONGODB_CONNECTION_URL = 'localhost:27017'
 
 MONGODB_DATABASE = 'weibo'
