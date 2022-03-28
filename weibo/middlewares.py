@@ -2,25 +2,25 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
-import logging
-import aiohttp
 import random
-from weibo.settings import PROXY_URL
+import base64
+
+proxyUser = "822088949450559488"
+proxyPass = "y1c5ZK5d"
+proxyHost = "http-short.xiaoxiangdaili.com"
+proxyPort = "10010"
+
+proxyServer = "http://%(host)s:%(port)s" % {
+    'host': proxyHost,
+    'port': proxyPort
+}
+proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
 
 
 class ProxyMiddleware(object):
-    proxypool_url = PROXY_URL
-    logger = logging.getLogger('middleware.proxy')
-
-    async def process_request(self, request, spider):
-        async with aiohttp.ClientSession() as client:
-            response = await client.get(self.proxypool_url)
-            if not response.status == 200:
-                return
-            proxy = await response.text()
-            self.logger.debug(f'set proxy {proxy}')
-            request.meta['proxy'] = f'http://{proxy}'
+    def process_request(self, request, spider):
+        request.meta['proxy'] = proxyServer
+        request.headers['Proxy-Authorization'] = proxyAuth
 
 
 class RandomUserAgentMiddleware(object):
@@ -31,9 +31,7 @@ class RandomUserAgentMiddleware(object):
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15',
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:65.0) Gecko/20100101 Firefox/65.0'
         ]
-        self.logger = logging.getLogger('middleware.proxy')
 
     def process_request(self, request, spider):
         user_agent = random.choice(self.user_agents)
-        # self.logger.debug(f'set user_agent {user_agent}')
         request.headers['User-Agent'] = user_agent

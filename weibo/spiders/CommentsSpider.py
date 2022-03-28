@@ -1,5 +1,6 @@
 import json
 import re
+import time
 import scrapy
 from gerapy_pyppeteer import PyppeteerRequest
 from weibo.items import WeiboItem, CommentUserItem
@@ -11,7 +12,7 @@ class CommentsspiderSpider(scrapy.Spider):
     allowed_domains = ['m.weibo.cn']
     weibo_url = 'https://m.weibo.cn/detail'
     comment_url = 'https://m.weibo.cn/comments/hotflow?id='
-    weibos_id = ['4732124995783072']
+    weibos_id = ['4749404870020364']
 
     custom_settings = {
         'ITEM_PIPELINES': {
@@ -21,6 +22,12 @@ class CommentsspiderSpider(scrapy.Spider):
             'weibo.pipelines.SourcePipeline': 303,
             'weibo.pipelines.CountPipeline': 304,
             'weibo.pipelines.MongoDBPipeline': 305,
+        },
+
+        'DOWNLOADER_MIDDLEWARES': {
+        'gerapy_pyppeteer.downloadermiddlewares.PyppeteerMiddleware': 541,
+        'weibo.middlewares.ProxyMiddleware': 542,
+        'weibo.middlewares.RandomUserAgentMiddleware': 543,
         }
     }
 
@@ -29,11 +36,8 @@ class CommentsspiderSpider(scrapy.Spider):
 
     def start_requests(self):
         for weibo_id in self.weibos_id:
-            yield PyppeteerRequest(f'{self.weibo_url}/{weibo_id}',
-                                   callback=self.parse_weibo, wait_for='.f-weibo.card9.m-panel',
-                                   meta={'weibo_id': weibo_id})
-            yield scrapy.Request(f'{self.comment_url}{weibo_id}&mid={weibo_id}', cookies=self.cookie,
-                                 callback=self.parse_comments, meta={'weibo_id': weibo_id})
+            yield PyppeteerRequest(f'{self.weibo_url}/{weibo_id}', callback=self.parse_weibo, wait_for='.f-weibo.card9.m-panel', meta={'weibo_id': weibo_id})
+            yield scrapy.Request(f'{self.comment_url}{weibo_id}&mid={weibo_id}', cookies=self.cookie, callback=self.parse_comments, meta={'weibo_id': weibo_id})
 
     def parse_weibo(self, response):
         weibo_id = response.meta.get('weibo_id')
@@ -95,7 +99,7 @@ class CommentsspiderSpider(scrapy.Spider):
                 comment_item['description'] = comment_user_info.get('description')
                 comment_item['fans_count'] = comment_user_info.get('followers_count')
                 comment_item['follows_count'] = comment_user_info.get('follow_count')
-                comment_item["weibos_count"] = comment_user_info.get('statuses_count')
+                comment_item['weibos_count'] = comment_user_info.get('statuses_count')
                 if comment_user_info.get('verified') == 'false':
                     comment_item['verified'] = comment_user_info.get('verified')
                     comment_item['verified_reason'] = 'None'

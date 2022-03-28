@@ -1,4 +1,6 @@
 import json
+import time
+
 import scrapy
 from weibo.items import FanItem
 
@@ -9,13 +11,14 @@ class FansspiderSpider(scrapy.Spider):
     # 粉丝列表
     fan_url = 'https://m.weibo.cn/api/container/getIndex?containerid=231051_-_fans_-_'
     # 用户列表
-    start_users = ['1776448504']
+    start_users = ['5886191812']
     # 从第一页开始
 
     def start_requests(self):
         for uid in self.start_users:
             yield scrapy.Request(f'{self.fan_url}{uid}',
                                  callback=self.parse_fans, meta={'uid': uid})
+
 
     def parse_fans(self, response):
         """
@@ -59,5 +62,6 @@ class FansspiderSpider(scrapy.Spider):
             else:
                 # 第一个ajax请求返回json报文没有since_id
                 since_id = 20
+
             yield scrapy.Request(f'{self.fan_url}{uid}&since_id={since_id}',
                                  callback=self.parse_fans, meta={'uid': uid})

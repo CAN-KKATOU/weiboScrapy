@@ -24,7 +24,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -89,12 +89,13 @@ COOKIES_ENABLED = True
 
 # ======================================================================================================================
 
-cookies = '_T_WM=25819906092; SUB=_2A25PHZG9DeRhGeFN6lEX8ifEzTmIHXVs4T_1rDV6PUJbkdAKLXKtkW1NQH_UVmjklbxqsRdjaj3fWUQWf3APswy3; SCF=Ak85drrVzkjf9lTXKl6yFa5WOiAX3idRh88VO_dd-95ZJVZ5-QqkBSJ4IYR8jCJBmU2JcPKrH7afGr3eyV7Ioj4.; MLOGIN=1; WEIBOCN_FROM=1110106030; XSRF-TOKEN=e4804c; M_WEIBOCN_PARAMS=oid=4727306683680863&luicode=10000011&lfid=1076033669102477'
+cookies = 'SUB=_2A25PHZG9DeRhGeFN6lEX8ifEzTmIHXVs4T_1rDV6PUJbkdAKLXKtkW1NQH_UVmjklbxqsRdjaj3fWUQWf3APswy3; SCF=Ak85drrVzkjf9lTXKl6yFa5WOiAX3idRh88VO_dd-95ZJVZ5-QqkBSJ4IYR8jCJBmU2JcPKrH7afGr3eyV7Ioj4.; _T_WM=37240867373; XSRF-TOKEN=712a44; WEIBOCN_FROM=1110006030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode=20000174&lfid=1076032616380702&uicode=20000174'
+
 
 # 中间件
 DOWNLOADER_MIDDLEWARES = {
     'gerapy_pyppeteer.downloadermiddlewares.PyppeteerMiddleware': 541,
-    # 'weibo.middlewares.ProxyMiddleware': 542,
+    'weibo.middlewares.ProxyMiddleware': 542,
     'weibo.middlewares.RandomUserAgentMiddleware': 543,
 }
 
@@ -106,7 +107,7 @@ ITEM_PIPELINES = {
 # 填写代理池对应url
 PROXY_URL = 'http://localhost:5555/random'
 
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 10
 
 GERAPY_PYPPETEER_PRETEND = True
 
